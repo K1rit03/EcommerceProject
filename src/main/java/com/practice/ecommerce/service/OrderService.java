@@ -1,6 +1,7 @@
 package com.practice.ecommerce.service;
 
 import com.practice.ecommerce.entity.Order;
+import com.practice.ecommerce.exception.ResourceNotFoundException;
 import com.practice.ecommerce.repository.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,9 @@ public class OrderService {
     }
 
     public Order createOrder(Order order) {
+        if(order.getQuantity() <= 0) {
+            throw new IllegalArgumentException("Quantity must be greater than zero");
+        }
         return orderRepository.save(order);
     }
 
@@ -27,7 +31,7 @@ public class OrderService {
 
     public Order getOrderById(Long id) {
         return orderRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Order not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Order not found with id: " + id));
     }
 
     public Order updateOrder(Long id, Order updatedOrder) {

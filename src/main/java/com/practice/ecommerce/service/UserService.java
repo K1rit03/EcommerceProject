@@ -1,6 +1,7 @@
 package com.practice.ecommerce.service;
 
 import com.practice.ecommerce.entity.User;
+import com.practice.ecommerce.exception.ResourceNotFoundException;
 import com.practice.ecommerce.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -21,7 +22,8 @@ public class UserService {
     }
 
     public User getUserById(Long id) {
-        return userRepository.findById(id).orElse(null);
+        return userRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
     }
 
     public User createUser(User user) {
